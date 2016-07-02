@@ -6,9 +6,9 @@ var md5        = require('MD5');
 var logger     = require('winston');
 
 var rtw = require('./rest_table_wrap.js');
+var dbi = require('./rest_dbinfo_wrap.js');
 
 var app = express();
-app.use(compress());
 
 
 /*
@@ -47,14 +47,18 @@ serverCtx.pool = pool;
 // setup app
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(compress());
 
 
 // setup routers
 var router = express.Router();
 app.use('/api', router);
 
-// setup for test.test1 in MySQL - 1st field should be PK
+// add generic db info lookups
+dbi(serverCtx, router, pool, md5);
+
 // add your tables here - FIXME
+// 1st field should be PK
 rtw(serverCtx, router, pool, 'test1',    md5);
 rtw(serverCtx, router, pool, 'document', md5);
 rtw(serverCtx, router, pool, 'keyword',  md5);

@@ -53,6 +53,41 @@ function rest_table_wrap(serverCtx, router, pool, table_name, md5) {
    logger.info("setting up rest services for " + table_name);
 
 
+   // GET (count)
+   router.get("/" + table_name + "/count", function (req, res) {
+
+      var result = {};
+      result.hasError = false;
+      result.headers  = req.headers;
+
+      var query = "SELECT count(1) as count FROM ??";
+      query = mysql.format(query, table_name);
+      result.query = query;
+
+      pool.getConnection().then((conn) => {
+
+         var rs = conn.query(query);
+         conn.release();
+         return rs;
+
+      }).then((rs) => {
+
+         result.rows = rs[0];
+         res.json(result);
+         logger.info(new Date() + ":" + JSON.stringify(req.headers));
+
+      }).catch((err) => {
+
+         result.hasError = true;
+         result.message  = err;
+         res.json(result);
+         logger.error(new Date() + ":[" + JSON.stringify(err) + "," + JSON.stringify(filterRequest(req)) + "]");
+
+      });
+
+   });
+
+
    // GET
    router.get("/" + table_name, function (req, res) {
 
