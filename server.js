@@ -63,7 +63,9 @@ rtw(serverCtx, router, pool, 'test1',    md5);
 rtw(serverCtx, router, pool, 'document', md5);
 rtw(serverCtx, router, pool, 'keyword',  md5);
 
-
+// static content setup - use nginx if possible
+app.use(express.static(__dirname + '/static'));
+logger.info("server has static content in " + __dirname + "/static");
 
 // handle everything else..
 app.use(function(req, res, next) {
@@ -77,10 +79,6 @@ app.use(function(req, res, next) {
    res.json(result);
    logger.error(new Date() + ":" + JSON.stringify(result));
 });
-
-// static content setup - use nginx if possible
-app.use(express.static(__dirname + '/static'));
-logger.info("server has static content in " + __dirname + "/static");
 
 
 
