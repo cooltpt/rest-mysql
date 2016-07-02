@@ -11,4 +11,3 @@ This is an example of a generic REST service wrapper using NodeJS/Express
 
 [Example Screen Shots](http://imgur.com/a/KboRJ)
 
-[contact](email:shaffer.david@outlook.com)
